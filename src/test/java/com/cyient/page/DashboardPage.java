@@ -1,14 +1,16 @@
-package com.cyient.page;
+ package com.cyient.page;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 
 public class DashboardPage {
+	
 	private By patientClientLocator=By.xpath("//div[text()='Patient/Client']");
-	private By patientsLocator=By.xpath("//div[text()='Patients']");
+	private By clickOnPatient=By.xpath("//div[text()='Patients']");
 
 	private WebDriver driver;
+	
 
 	public DashboardPage(WebDriver driver) {
 		this.driver = driver;
@@ -28,7 +30,7 @@ public class DashboardPage {
 	
 	public void patientDetails(){
 	
-		driver.findElement(details).click();
+		driver.findElement(clickOnPatient).click();
 	}
 
 }

@@ -1,5 +1,9 @@
 package com.cyient.test;
 
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertTrue;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
@@ -7,66 +11,62 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.cyient.base.WebDriverWrapper;
+import com.cyient.page.AddPatientPage;
 import com.cyient.page.DashboardPage;
 import com.cyient.page.LoginPage;
+import com.cyient.page.PatientDashboard;
 import com.cyient.page.PatientFinderPage;
 
 public class PatientTest extends WebDriverWrapper {
 
 	@Test
-	public void addPatientTest() throws InterruptedException {
-		
-		LoginPage login=new LoginPage(driver);
+	public void allPatientTest() throws InterruptedException {
+
+		LoginPage login = new LoginPage(driver);
 		login.sendUsername("admin");
 		login.sendPassword("pass");
 		login.selectLanaguageByText("English (Indian)");
 		login.clickOnLogin();
 
-	//dashboardpage
-		DashboardPage dashboard=new DashboardPage(driver);
+		// DashboardPage
+		DashboardPage dashboard = new DashboardPage(driver);
+		dashboard.getDashboardPageTitle();
 		dashboard.mousehoverOnPatientClient();
-		dashboard.clickOnPatient();
-		
-      //patient finder
-		PatientFinderPage patientFinder=new PatientFinderPage(driver);
+		dashboard.patientDetails();;
+
+		// patient finder
+		PatientFinderPage patientFinder = new PatientFinderPage(driver);
 		patientFinder.switchToFinFrame();
 		patientFinder.clickOnAddNewPatient();
 		patientFinder.switchOutOfFrame();
 
-		
-		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@name='pat']")));
-		driver.findElement(By.id("form_fname")).sendKeys("shraddha");
-		driver.findElement(By.id("form_lname")).sendKeys("hiwakar");
-		driver.findElement(By.id("form_DOB")).sendKeys("2021-06-07");
-		Select selectGender = new Select(driver.findElement(By.id("form_sex")));
-		selectGender.selectByVisibleText("Female");
-		driver.findElement(By.id("create")).click();
-		driver.switchTo().defaultContent();
+		// AddPatientPage
+		AddPatientPage addPatient = new AddPatientPage(driver);
+		addPatient.switchFrame();
+		addPatient.firstName("shraddha");
+		addPatient.LastName("Hiwarkar");
+		addPatient.dob("1998-04-28");
+		addPatient.gender("female");
+		addPatient.createNewPatient();
+		addPatient.switchoutofFrame();
+		Thread.sleep(3000);
+          addPatient.switchFrame();
+          addPatient.confirmNewPatient();
+          addPatient.switchoutofFrame();
+          Thread.sleep(3000);
+          addPatient.alertpatient();
+          addPatient.closeframe();
 
-		Thread.sleep(5000);
-
-		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@id='modalframe']")));
-		driver.findElement(By.xpath("//input[@value='Confirm Create New Patient']")).click();
-
-		driver.switchTo().defaultContent();
-		Thread.sleep(5000);
-		String actualAlertText = driver.switchTo().alert().getText();
-		System.out.println(actualAlertText);
-
-		driver.switchTo().alert().accept();
-
-		driver.findElement(By.xpath("//div[@class='closeDlgIframe']")).click();
-
-		
-		driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@name='pat']")));
-		String actualValue = driver.findElement(By.xpath("//h2[contains(text(),'Medical Record')]")).getText();
-		System.out.println(actualValue);
-
-		
 	
-		Assert.assertTrue(actualAlertText.contains("New Due Clinical Reminders"));
+        //patientDashboad
+          PatientDashboard record = new PatientDashboard(driver);
+          record.SwitchToFrame();
+          String actualValue = record.medicalRecord();
+  		System.out.println(actualValue);
+  	    Assert.assertEquals(actualValue,record.medicalRecord());
+  	
 	
-																					
+
 	}
 
 }
